@@ -5,13 +5,18 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, CommandHandler, ContextTypes, filters
 from groq import Groq
 
+# ====== OPTIONAL: auto-detect language (fallback ke ID kalau lib tak ada) ======
+try:
+    from langdetect import detect as _lang_detect
+except Exception:
+    _lang_detect = None
+
 # ================== LOAD ENV ==================
 load_dotenv()
 
-BOT_USERNAME = os.getenv("BOT_USERNAME")
+BOT_USERNAME_ENV = (os.getenv("BOT_USERNAME") or "").lower().strip()
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-DEFAULT_LANG_PROMPT = os.getenv("DEFAULT_LANG_PROMPT", "Jawab dalam bahasa Indonesia: ")
 
 # ================== LIST MODEL (FALLBACK ORDER) ==================
 GROQ_MODELS = [
@@ -22,8 +27,67 @@ GROQ_MODELS = [
     "qwen/qwen3-32b",
 ]
 
-# Model aktif (bisa diubah dengan /setmodel)
-ACTIVE_MODEL = None  
+ACTIVE_MODEL = None           # Model aktif
+LANG_PREFS = {}              # bahasa pilihan per chat (id/en)
+ACTIVE_CHATS = {}            # status aktif chat
+
+# ================== TRANSLATIONS ==================
+TRANSLATIONS = {
+    "id": {
+        "start": "Halo! 👋 Saya adalah AI bot.\n\n"
+                 "Perintah:\n"
+                 "/ai <pertanyaan> → tanya AI\n"
+                 "/setmodel <nama_model> → pilih model AI\n"
+                 "/mymodel → lihat model aktif\n"
+                 "/listmodels → daftar model tersedia\n"
+                 "/setlang <id|en> → ganti bahasa jawaban\n"
+                 "/end → hentikan chat dengan bot\n\n"
+                 "Default: Bahasa Indonesia 🇮🇩",
+        "end": "👋 Oke, chat dihentikan. Ketik /start untuk memulai lagi.",
+        "setlang_usage": "Gunakan: /setlang <id|en>",
+        "setlang_success_id": "✅ Bahasa diubah ke: Bahasa Indonesia 🇮🇩",
+        "setlang_success_en": "✅ Language set to: English 🇬🇧",
+        "setlang_invalid": "❌ Bahasa tidak valid. Pilih: id atau en",
+        "ai_empty": "Ketik pertanyaan setelah `!ai` atau `/ai` ya 🙂",
+        "ai_fail": "Maaf, semua model AI sedang tidak tersedia. Coba lagi sebentar ya 🙏",
+        "setmodel_usage": "Gunakan format: `/setmodel nama_model`\n\nModel tersedia:\n",
+        "setmodel_ok": "✅ Model di-set ke: ",
+        "setmodel_invalid": "❌ Model tidak ada.\nModel tersedia:\n",
+        "mymodel_none": "🔎 Tidak ada model khusus yang dipilih.\nBot akan pakai urutan default:\n",
+        "mymodel_active": "🔎 Model aktif saat ini: ",
+        "listmodels": "📋 Daftar model tersedia:\n",
+        "error": "Ups, ada error di bot. Coba lagi ya 🙏",
+    },
+    "en": {
+        "start": "Hello! 👋 I am an AI bot.\n\n"
+                 "Commands:\n"
+                 "/ai <question> → ask AI\n"
+                 "/setmodel <model_name> → choose AI model\n"
+                 "/mymodel → check active model\n"
+                 "/listmodels → list available models\n"
+                 "/setlang <id|en> → change reply language\n"
+                 "/end → stop chatting with the bot\n\n"
+                 "Default: English 🇬🇧",
+        "end": "👋 Okay, chat ended. Type /start to begin again.",
+        "setlang_usage": "Usage: /setlang <id|en>",
+        "setlang_success_id": "✅ Bahasa diubah ke: Bahasa Indonesia 🇮🇩",
+        "setlang_success_en": "✅ Language set to: English 🇬🇧",
+        "setlang_invalid": "❌ Invalid language. Choose: id or en",
+        "ai_empty": "Type your question after `!ai` or `/ai` 🙂",
+        "ai_fail": "Sorry, all AI models are currently unavailable. Please try again later 🙏",
+        "setmodel_usage": "Usage: `/setmodel model_name`\n\nAvailable models:\n",
+        "setmodel_ok": "✅ Model set to: ",
+        "setmodel_invalid": "❌ Model not found.\nAvailable models:\n",
+        "mymodel_none": "🔎 No specific model selected.\nBot will use default order:\n",
+        "mymodel_active": "🔎 Current active model: ",
+        "listmodels": "📋 Available models:\n",
+        "error": "Oops, an error occurred in the bot. Please try again 🙏",
+    }
+}
+
+def t(chat_id, key):
+    lang = LANG_PREFS.get(chat_id, "id")
+    return TRANSLATIONS[lang][key]
 
 # ================== LOGGING ==================
 logging.basicConfig(
@@ -36,117 +100,203 @@ logger = logging.getLogger(__name__)
 groq_client = Groq(api_key=GROQ_API_KEY)
 
 # ================== HANDLERS ==================
-async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    global ACTIVE_MODEL
-    if not update.message or not update.message.text:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat:
+        return
+    ACTIVE_CHATS[chat.id] = True
+    await msg.reply_text(t(chat.id, "start"))
+
+async def end(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat:
+        return
+    ACTIVE_CHATS[chat.id] = False
+    await msg.reply_text(t(chat.id, "end"))
+
+async def set_lang(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat:
         return
 
-    text = update.message.text.strip()
-    is_command = text.lower().startswith("!ai") or text.lower().startswith("/ai")
-    is_mention = f"@{BOT_USERNAME}" in text
-    is_reply_to_bot = (
-        update.message.reply_to_message
-        and update.message.reply_to_message.from_user.username == BOT_USERNAME
+    if not context.args:
+        await msg.reply_text(t(chat.id, "setlang_usage"))
+        return
+
+    lang = context.args[0].lower()
+    if lang not in ["id", "en"]:
+        await msg.reply_text(t(chat.id, "setlang_invalid"))
+        return
+
+    LANG_PREFS[chat.id] = lang
+    await msg.reply_text(
+        t(chat.id, "setlang_success_id") if lang == "id" else t(chat.id, "setlang_success_en")
     )
 
-    if is_command or is_mention or is_reply_to_bot:
-        prompt = (
-            text.replace(f"@{BOT_USERNAME}", "")
-            .replace("!ai", "")
-            .replace("/ai", "")
-            .strip()
+def _resolve_lang(chat_id: int, text: str) -> str:
+    """Prioritaskan preferensi manual; kalau tidak ada, deteksi otomatis."""
+    if LANG_PREFS.get(chat_id):
+        return LANG_PREFS[chat_id]
+    if _lang_detect:
+        try:
+            return "id" if _lang_detect(text).startswith("id") else "en"
+        except Exception:
+            pass
+    return "id"  # default aman
+
+async def ai_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat or not msg.text:
+        return
+
+    if not ACTIVE_CHATS.get(chat.id, True):
+        return
+
+    text = msg.text.strip()
+    chat_type = chat.type  # "private", "group", "supergroup", "channel"
+    lang = _resolve_lang(chat.id, text)
+    system_prompt = "Jawab dalam bahasa Indonesia: " if lang == "id" else "Answer in English: "
+
+    # Ambil username bot fallback dari context kalau env kosong/salah
+    bot_username = (BOT_USERNAME_ENV or (getattr(context.bot, "username", "") or "")).lower()
+    text_lower = text.lower()
+
+    if chat_type == "private":
+        is_triggered = True
+        prompt = text
+    else:
+        is_command = text_lower.startswith("!ai") or text_lower.startswith("/ai")
+        is_mention = (bot_username and f"@{bot_username}" in text_lower)
+        is_reply_to_bot = (
+            msg.reply_to_message
+            and msg.reply_to_message.from_user
+            and msg.reply_to_message.from_user.id == context.bot.id
         )
-        if not prompt:
-            await update.message.reply_text("Ketik pertanyaan setelah `!ai` atau `/ai` ya 🙂")
-            return
 
-        ai_text = None
-        last_error = None
+        is_triggered = is_command or is_mention or is_reply_to_bot
+        prompt = (
+            text.replace(f"@{bot_username}", "", 1) if bot_username else text
+        ).replace("!ai", "", 1).replace("/ai", "", 1).strip()
 
-        # Tentukan urutan model yang dicoba
-        models_to_try = []
-        if ACTIVE_MODEL:
-            models_to_try.append(ACTIVE_MODEL)
-        models_to_try.extend([m for m in GROQ_MODELS if m != ACTIVE_MODEL])
+    if not is_triggered or not prompt:
+        if chat_type == "private":
+            await msg.reply_text(t(chat.id, "ai_empty"))
+        return
 
-        # Coba semua model sesuai urutan
-        for model in models_to_try:
-            try:
-                resp = groq_client.chat.completions.create(
-                    model=model,
-                    messages=[{"role": "user", "content": DEFAULT_LANG_PROMPT + prompt}],
-                    temperature=0.7,
-                    max_tokens=800,
-                )
-                ai_text = resp.choices[0].message.content if resp.choices else None
-                if ai_text:
-                    logger.info(f"Jawaban sukses pakai model: {model}")
-                    break
-            except Exception as e:
-                last_error = e
-                logger.warning(f"Model {model} gagal, mencoba model berikutnya...")
+    ai_text = None
+    last_error = None
 
-        if ai_text:
-            await update.message.reply_text(ai_text)
-        else:
-            logger.exception("Semua model gagal", exc_info=last_error)
-            await update.message.reply_text("Maaf, semua model AI sedang tidak tersedia. Coba lagi sebentar ya 🙏")
+    models_to_try = [ACTIVE_MODEL] if ACTIVE_MODEL else []
+    models_to_try += [m for m in GROQ_MODELS if m != ACTIVE_MODEL]
+
+    for model in models_to_try:
+        try:
+            resp = groq_client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": system_prompt + prompt}],
+                temperature=0.7,
+                max_tokens=800,
+            )
+            ai_text = resp.choices[0].message.content if resp.choices else None
+            if ai_text:
+                logger.info(f"Sukses pakai model: {model}")
+                break
+        except Exception as e:
+            last_error = e
+            logger.warning(f"Model {model} gagal: {e}")
+
+    if ai_text:
+        await msg.reply_text(ai_text)
+    else:
+        logger.exception("Semua model gagal", exc_info=last_error)
+        await msg.reply_text(t(chat.id, "ai_fail"))
 
 async def cmd_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat:
+        return
     prompt = " ".join(context.args)
     if not prompt:
-        await update.message.reply_text("Format: `/ai pertanyaan`")
+        await msg.reply_text(t(chat.id, "ai_empty"))
         return
+    # delegasi ke ai_reply (akan menangani bahasa & model)
+    # buat message tiruan supaya ai_reply pakai teks prompt
+    update.effective_message.text = prompt
     await ai_reply(update, context)
 
 async def set_model(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat:
+        return
+
     global ACTIVE_MODEL
     if not context.args:
-        await update.message.reply_text(
-            "Gunakan format: `/setmodel nama_model`\n\nModel tersedia:\n" + "\n".join(GROQ_MODELS)
-        )
+        await msg.reply_text(t(chat.id, "setmodel_usage") + "\n".join(GROQ_MODELS))
         return
 
     model_name = context.args[0]
     if model_name in GROQ_MODELS:
         ACTIVE_MODEL = model_name
-        await update.message.reply_text(f"✅ Model di-set ke: `{ACTIVE_MODEL}`")
+        await msg.reply_text(t(chat.id, "setmodel_ok") + f"`{ACTIVE_MODEL}`")
     else:
-        await update.message.reply_text(
-            f"❌ Model `{model_name}` tidak ada.\nModel tersedia:\n" + "\n".join(GROQ_MODELS)
-        )
+        await msg.reply_text(t(chat.id, "setmodel_invalid") + "\n".join(GROQ_MODELS))
 
 async def my_model(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat:
+        return
+
     global ACTIVE_MODEL
     if ACTIVE_MODEL:
-        await update.message.reply_text(f"🔎 Model aktif saat ini: `{ACTIVE_MODEL}`")
+        await msg.reply_text(t(chat.id, "mymodel_active") + f"`{ACTIVE_MODEL}`")
     else:
-        await update.message.reply_text(
-            f"🔎 Tidak ada model khusus yang dipilih.\nBot akan pakai urutan default:\n" + "\n".join(GROQ_MODELS)
-        )
+        await msg.reply_text(t(chat.id, "mymodel_none") + "\n".join(GROQ_MODELS))
 
 async def list_models(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    models = "\n".join(GROQ_MODELS)
-    await update.message.reply_text("📋 Daftar model tersedia:\n" + models)
+    msg = update.effective_message
+    chat = update.effective_chat
+    if not msg or not chat:
+        return
+    await msg.reply_text(t(chat.id, "listmodels") + "\n".join(GROQ_MODELS))
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = None
+    if isinstance(update, Update) and update.effective_chat:
+        chat_id = update.effective_chat.id
     logger.error("Exception while handling an update:", exc_info=context.error)
     try:
-        if isinstance(update, Update) and update.effective_message:
-            await update.effective_message.reply_text("Ups, ada error di bot. Coba lagi ya 🙏")
+        if isinstance(update, Update) and update.effective_message and chat_id:
+            await update.effective_message.reply_text(t(chat_id, "error"))
     except Exception:
         pass
 
 # ================== MAIN ==================
 def main():
+    if not TELEGRAM_BOT_TOKEN:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN belum di-set di .env")
+    if not GROQ_API_KEY:
+        raise RuntimeError("GROQ_API_KEY belum di-set di .env")
+
     app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("end", end))
+    app.add_handler(CommandHandler("setlang", set_lang))
     app.add_handler(CommandHandler("ai", cmd_ai))
     app.add_handler(CommandHandler("setmodel", set_model))
     app.add_handler(CommandHandler("mymodel", my_model))
     app.add_handler(CommandHandler("listmodels", list_models))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, ai_reply))
     app.add_error_handler(error_handler)
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+
+    # Biarkan default allowed_updates (lebih aman lintas versi)
+    app.run_polling()
 
 if __name__ == "__main__":
     main()
