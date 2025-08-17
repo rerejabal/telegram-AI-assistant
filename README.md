@@ -6,16 +6,17 @@ Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI mod
 
 ## ✨ Features
 
-- Supports group and private chat  
-- Environment variable configuration (.env)  
-- Markdown & code formatting support  
-- Lightweight & easy to deploy
-  - Call AI using:
-  - `/ai` command  
-  - `!ai` shortcut  
-  - Mention bot username  
-  - Replying to a message
-    
+- Supports group, channel, and private chat
+- Multi-language replies (Indonesian ID & English EN)
+- Auto language detection or manual setting with /setlang
+- Environment variable configuration (.env)
+- Customizable AI models with /setmodel, /mymodel, /listmodels
+- Fallback model system (tries next model if one fails)
+- Lightweight & easy to deploy (minimal dependencies)
+- Markdown & code formatting support
+- Conversation control with /start and /end
+- User-friendly error handling
+
 ---
 ## 📦 Requirements
 - Python 3.8+ (make sure it's installed)  
@@ -26,6 +27,7 @@ Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI mod
   - `python-telegram-bot`  
   - `groq`  
   - `python-dotenv`
+  - `langdetect`
 ---
 ## Setting up your Bot in Telegram
 
