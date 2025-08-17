@@ -2,7 +2,9 @@
 
 Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI models directly in your chat. It supports multiple providers (Groq, Llama, Gemma, Qwen, etc.) with automatic fallback when one is unavailable.
 
+
 ---
+
 
 ## ✨ Features
 
@@ -17,7 +19,10 @@ Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI mod
 - Conversation control with /start and /end
 - User-friendly error handling
 
+
 ---
+
+
 ## 📦 Requirements
 - Python 3.8+ (make sure it's installed)  
 - pip (Python package manager)  
@@ -28,7 +33,11 @@ Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI mod
   - `groq`  
   - `python-dotenv`
   - `langdetect`
+ 
+  
 ---
+
+
 ## 🤖 Setting up the Bot in Telegram
 
 ### 1. Start BotFather
@@ -79,7 +88,9 @@ You can set details with commands in BotFather:
 - Add your Telegram bot token to .env
 > ⚠️Before that, let’s set up the bot script first below!
 
+
 ---
+
 
 ## ⚙️ Setting up the Bot Script
 > Right-click the desired folder location, then select Open in Terminal or PowerShell or even Command Prompt if available.
@@ -110,7 +121,11 @@ GROQ_MODELS=llama-3.3-70b-versatile,llama3-70b-8192,llama3-8b-8192,gemma2-9b-it,
 # Default language instruction for the AI
 DEFAULT_LANG_PROMPT=Answer in Indonesian:
 ```
+
+
 ---
+
+
 ## 📂 Folder Structure
 ```
 telegram-AI-assistant/
@@ -119,7 +134,11 @@ telegram-AI-assistant/
  ├── auto_start.bat
  └── requirements.txt
 ```
+
+
  ---
+
+ 
 ## 🕹️ Usage
 Once everything is configured properly, start the bot with:
 ```
@@ -154,7 +173,10 @@ All command in Telegram AI Assistant:
 - @botname <question> → mention bot to trigger reply in groups
 - (reply to bot message) → continue conversation in groups
 
+
 ---
+
+
 ## 🗘 Update the Bot
 Update your Script when its availabe:
 ```
