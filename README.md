@@ -97,7 +97,7 @@ You can set details with commands in BotFather:
 ### 1. Clone this repository on Terminal or PowerShell or Command Prompt:
 ```
 git clone https://github.com/rerejabal/telegram-AI-assistant.git
-cd ai-chat-bot
+cd telegram-AI-assistant
 ```
 ### 2. Install dependency:
 ```
