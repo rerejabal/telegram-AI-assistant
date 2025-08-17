@@ -11,6 +11,13 @@ try:
 except Exception:
     _lang_detect = None
 
+# ====== RICH & ART BANNER ======
+from art import text2art
+from rich.console import Console
+from rich.panel import Panel
+
+console = Console()
+
 # ================== LOAD ENV ==================
 load_dotenv()
 
@@ -42,11 +49,11 @@ TRANSLATIONS = {
                  "/listmodels → daftar model tersedia\n"
                  "/setlang <id|en> → ganti bahasa jawaban\n"
                  "/end → hentikan chat dengan bot\n\n"
-                 "Default: Bahasa Indonesia 🇮🇩",
+                 "Default: Bahasa Indonesia",
         "end": "👋 Oke, chat dihentikan. Ketik /start untuk memulai lagi.",
         "setlang_usage": "Gunakan: /setlang <id|en>",
-        "setlang_success_id": "✅ Bahasa diubah ke: Bahasa Indonesia 🇮🇩",
-        "setlang_success_en": "✅ Language set to: English 🇬🇧",
+        "setlang_success_id": "✅ Bahasa diubah ke: Bahasa Indonesia",
+        "setlang_success_en": "✅ Language set to: English",
         "setlang_invalid": "❌ Bahasa tidak valid. Pilih: id atau en",
         "ai_empty": "Ketik pertanyaan setelah `!ai` atau `/ai` ya 🙂",
         "ai_fail": "Maaf, semua model AI sedang tidak tersedia. Coba lagi sebentar ya 🙏",
@@ -67,11 +74,11 @@ TRANSLATIONS = {
                  "/listmodels → list available models\n"
                  "/setlang <id|en> → change reply language\n"
                  "/end → stop chatting with the bot\n\n"
-                 "Default: English 🇬🇧",
+                 "Default: English",
         "end": "👋 Okay, chat ended. Type /start to begin again.",
         "setlang_usage": "Usage: /setlang <id|en>",
-        "setlang_success_id": "✅ Bahasa diubah ke: Bahasa Indonesia 🇮🇩",
-        "setlang_success_en": "✅ Language set to: English 🇬🇧",
+        "setlang_success_id": "✅ Bahasa diubah ke: Bahasa Indonesia",
+        "setlang_success_en": "✅ Language set to: English",
         "setlang_invalid": "❌ Invalid language. Choose: id or en",
         "ai_empty": "Type your question after `!ai` or `/ai` 🙂",
         "ai_fail": "Sorry, all AI models are currently unavailable. Please try again later 🙏",
@@ -98,6 +105,20 @@ logger = logging.getLogger(__name__)
 
 # ================== CLIENT ==================
 groq_client = Groq(api_key=GROQ_API_KEY)
+
+# ================== BANNER ==================
+def show_banner():
+    banner = text2art("        MYSTIC   BOT   SCRIPT", font="small")
+    console.print(
+        Panel(
+            banner,
+            title="🤖 Telegram AI Assistant",
+            subtitle="by rerejabal",
+            style="bold magenta",
+        )
+    )
+    console.print(f"[cyan]Bot username:[/cyan] @{BOT_USERNAME_ENV or 'unknown'}")
+    console.print(f"[yellow]Active models order:[/yellow]\n- " + "\n- ".join(GROQ_MODELS))
 
 # ================== HANDLERS ==================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -225,7 +246,6 @@ async def cmd_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await msg.reply_text(t(chat.id, "ai_empty"))
         return
     # delegasi ke ai_reply (akan menangani bahasa & model)
-    # buat message tiruan supaya ai_reply pakai teks prompt
     update.effective_message.text = prompt
     await ai_reply(update, context)
 
@@ -284,6 +304,9 @@ def main():
     if not GROQ_API_KEY:
         raise RuntimeError("GROQ_API_KEY belum di-set di .env")
 
+    # tampilkan banner dulu
+    show_banner()
+
     app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("end", end))
@@ -295,7 +318,6 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, ai_reply))
     app.add_error_handler(error_handler)
 
-    # Biarkan default allowed_updates (lebih aman lintas versi)
     app.run_polling()
 
 if __name__ == "__main__":
