@@ -132,6 +132,7 @@ Now you can interact with AI in Telegram.
 
 - Group/Channel:
   - The bot only responds when triggered with:
+    - `/start` first 
     - `/ai` <teks>
     - `!ai` <teks>
     - Mention @username_bot
