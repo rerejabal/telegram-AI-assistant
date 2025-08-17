@@ -33,6 +33,8 @@ Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI mod
   - `groq`  
   - `python-dotenv`
   - `langdetect`
+  - `art`
+  - `rich`
  
   
 ---
