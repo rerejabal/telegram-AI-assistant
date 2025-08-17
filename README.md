@@ -96,7 +96,7 @@ You can set details with commands in BotFather:
 > Right-click the desired folder location, then select Open in Terminal or PowerShell or even Command Prompt if available.
 ### 1. Clone this repository on Terminal or PowerShell or Command Prompt:
 ```
-git clone https://github.com/rerejabal/ai-chat-bot.git
+git clone https://github.com/rerejabal/telegram-AI-assistant.git
 cd ai-chat-bot
 ```
 ### 2. Install dependency:
