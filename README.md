@@ -148,8 +148,8 @@ All command in Telegram AI Assistant:
 - `/setmodel` <model_name> → manually select a model
 - `/mymodel` → check which model is currently active
 - `/listmodels` → see all available models
-- `/setlang` id → switch reply language to Indonesian 🇮🇩
-- `/setlang` en → switch reply language to English 🇬🇧
+- `/setlang` id → switch reply language to Indonesian
+- `/setlang` en → switch reply language to English
 - `!ai` <question> → alternative AI trigger in groups
 - @botname <question> → mention bot to trigger reply in groups
 - (reply to bot message) → continue conversation in groups
