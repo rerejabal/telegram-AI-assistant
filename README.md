@@ -120,7 +120,7 @@ telegram-AI-assistant/
  └── requirements.txt
 ```
  ---
-## ▶️ Usage
+## 🕹️ Usage
 Once everything is configured properly, start the bot with:
 ```
 python bot.py
