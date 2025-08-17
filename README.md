@@ -43,16 +43,11 @@ telegram-AI-assistant/
 git clone https://github.com/your-username/ai-chat-bot.git
 cd ai-chat-bot
 ```
-### 2. Create a virtual environment:
-```
-python -m venv venv
-venv\Scripts\activate
-```
-### 3. Install dependencies:
+### 2. Install dependency:
 ```
 pip install -r requirements.txt
 ```
-### 4. Set your environment variables in `.env`:
+### 3. Set your environment variables in `.env`:
 > Right-click on the .env file then select Edit in Notepad or anything.
 ```
 # ============== TELEGRAM BOT CONFIG ==============
@@ -82,6 +77,13 @@ Now you can interact with AI in Telegram, for example:
 - !ai write me a poem
 - @yourbotusername explain quantum physics
 - Reply to any message with /ai to get a smart response
+
+Command in Telegram:
+- /ai question → ask AI
+- /setmodel model_name → manually select a model
+- /mymodel → check which model is currently active
+- /listmodels → see all available models
+
 ---
 ## 🔄 Update the Bot
 Update your Script when its availabe:
