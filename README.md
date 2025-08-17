@@ -29,7 +29,7 @@ Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI mod
   - `python-dotenv`
   - `langdetect`
 ---
-## Setting up your Bot in Telegram
+## 💻 Setting up your Bot in Telegram
 
 ### 1. Start BotFather
 - Open Telegram and search for BotFather (official account with blue check).
