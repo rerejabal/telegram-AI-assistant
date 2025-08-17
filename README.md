@@ -117,9 +117,6 @@ GROQ_API_KEY=
 
 # List of fallback models (separated by commas, priority order)
 GROQ_MODELS=llama-3.3-70b-versatile,llama3-70b-8192,llama3-8b-8192,gemma2-9b-it,qwen/qwen3-32b
-
-# Default language instruction for the AI
-DEFAULT_LANG_PROMPT=Answer in Indonesian:
 ```
 
 
@@ -172,7 +169,6 @@ All command in Telegram AI Assistant:
 - `!ai` <question> → alternative AI trigger in groups
 - @botname <question> → mention bot to trigger reply in groups
 - (reply to bot message) → continue conversation in groups
-
 
 ---
 
