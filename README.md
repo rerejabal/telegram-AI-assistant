@@ -136,7 +136,7 @@ Now you can interact with AI in Telegram.
     - `/ai` <teks>
     - `!ai` <teks>
     - Mention @username_bot
-    - Reply ke pesan bot
+    - Reply to message bot
 
 All command in Telegram AI Assistant:
 
