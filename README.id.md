@@ -4,6 +4,7 @@
 [![Bahasa Indonesia](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Indonesia.png)](README.id.md)
 --------
 <img width="1098" height="580" alt="image" src="https://github.com/user-attachments/assets/537eb22f-a774-45ac-b0e8-ab65741b4fd0" />
+
 # Telegram AI Assistant
 
 Telegram AI Assistant adalah chatbot Telegram yang memungkinkan kamu memanggil model AI canggih langsung di obrolanmu. Mendukung banyak penyedia (Groq, Llama, Gemma, Qwen, dll.) dengan fallback otomatis jika salah satu tidak tersedia.
@@ -185,4 +186,5 @@ Update script kamu saat tersedia pembaruan:
 ```
 git pull
 ```
+
 
