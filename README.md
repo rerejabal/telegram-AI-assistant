@@ -4,7 +4,7 @@
 [![Bahasa Indonesia](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Indonesia.png)](README.id.md)
 --------
 
-<img width="1098" height="580" alt="image" src="https://github.com/user-attachments/assets/537eb22f-a774-45ac-b0e8-ab65741b4fd0" />
+<img width="1095" height="520" alt="image (2)" src="https://github.com/user-attachments/assets/094266cf-aa6f-4563-8ed5-78cfce5aa25d" />
 
 # Telegram AI Assistant
 
@@ -106,7 +106,7 @@ You can set details with commands in BotFather:
 > Right-click the desired folder location, then select Open in Terminal or PowerShell or even Command Prompt if available.
 ### 1. Clone this repository on Terminal or PowerShell or Command Prompt:
 ```
-git clone https://github.com/rerejabal/telegram-AI-assistant.git
+git clone https://github.com/rey-mystic/telegram-AI-assistant.git
 cd telegram-AI-assistant
 ```
 ### 2. Install dependency:
