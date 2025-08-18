@@ -1,3 +1,7 @@
+<img width="1098" height="580" alt="Screenshot 2025-08-18 143917" src="https://github.com/user-attachments/assets/1006a350-b544-4cd7-af3d-5cee1cdc1ee4" />
+
+
+
 # Telegram AI Assistant
 
 Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI models directly in your chat. It supports multiple providers (Groq, Llama, Gemma, Qwen, etc.) with automatic fallback when one is unavailable.
@@ -131,6 +135,7 @@ telegram-AI-assistant/
  ├── bot.py
  ├── .env
  ├── auto_start.bat
+ ├── banner_utils.py
  └── requirements.txt
 ```
 
