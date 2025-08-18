@@ -1,112 +1,187 @@
-```markdown
-# Auto Email Sender
 
-Sebuah alat sederhana untuk mengirim email otomatis - jadwalkan dan kirim ke banyak penerima dengan mudah.
+#### *Baca ini dengan bahasa lain:*  
+[![English](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/United-States.png)](README.md)
+[![Bahasa Indonesia](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Indonesia.png)](README.id.md)
+--------
+<img width="1098" height="580" alt="image" src="https://github.com/user-attachments/assets/537eb22f-a774-45ac-b0e8-ab65741b4fd0" />
+# Telegram AI Assistant
+
+Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI models directly in your chat. It supports multiple providers (Groq, Llama, Gemma, Qwen, etc.) with automatic fallback when one is unavailable.
+
 
 ---
 
-## ✨ Fitur
-- Penjadwalan email harian otomatis
-- Mendukung banyak penerima
-- Subjek & isi email dari file teks
-- Bisa melampirkan banyak file
-- Dukungan zona waktu
+
+## ✨ Features
+
+- Supports group, channel, and private chat
+- Multi-language replies (Indonesian ID & English EN)
+- Auto language detection or manual setting with /setlang
+- Environment variable configuration (.env)
+- Customizable AI models with /setmodel, /mymodel, /listmodels
+- Fallback model system (tries next model if one fails)
+- Lightweight & easy to deploy (minimal dependencies)
+- Markdown & code formatting support
+- Conversation control with /start and /end
+- User-friendly error handling
+
+
+---
+
+
+## 📦 Requirements
+- Python 3.8+ (make sure it's installed)  
+- pip (Python package manager)  
+- A Telegram Bot Token and username (from [@BotFather](https://t.me/BotFather))  
+- GROQ API Key (https://console.groq.com/keys)
+- Required Libraries:  
+  - `python-telegram-bot`  
+  - `groq`  
+  - `python-dotenv`
+  - `langdetect`
+  - `art`
+  - `rich`
+ 
   
 ---
 
-## 📦 Kebutuhan
-- Python 3.8+ (pastikan sudah terpasang)
-- pip (pengelola paket Python)
-- Akun email yang mendukung SMTP (Gmail, Outlook, Yahoo, dll.)
-- Library yang dibutuhkan:
-  - schedule  
-  - art  
-  - python-dotenv  
-  - pytz  
-  - rich  
+
+## 🤖 Setting up the Bot in Telegram
+
+### 1. Start BotFather
+- Open Telegram and search for BotFather (official account with blue check).
+- Open chat and press `Start`
+
+### 2. Create a New Bot
+Type:
+```
+/newbot
+```
+BotFather will ask for:
+- Bot Name → display name (e.g., Crypto Hunter AI)
+- Username → must end with bot (e.g., crypto_hunter_bot)
+
+If successful, BotFather replies with:
+```
+Done! Congratulations on your new bot.
+Use this token to access the HTTP API:
+123456789:AAExampleTokenFromBotFather
+```
+> ⚠️This token is your secret key, do not share it!
+
+### 3. Customize Your Bot
+
+You can set details with commands in BotFather:
+- `/setname` → change a bot's name
+- `/setdescription` → change bot description
+- `/setabouttext` → change bot about info
+- `/setuserpic` → change bot profile photo
+- `/setcommands` → change the list of commands (e.g. /start - Start the bot, /help - Show help)
+- `/deletebot` → delete a bot
+
+### 4. Setting Your Bot
+- `/token` → get authorization token
+- `/revoke` → revoke bot access token
+- `/setjoingroups` → can your bot be added to groups? (Allow you to assign the bot to channel or group)
+- `/setprivacy` → toggle privacy mode in groups
+  - Enable → bot only receives messages starting with / (commands).
+  - Disable → bot can see all messages in groups (useful for filter bots, auto-reply, moderation).
+ 
+### 5. Add Bot to a Group or Channel
+- Open your group → Add your bot.
+- Promote it to Admin and grant the necessary permissions (delete messages, pin messages, invite users, etc.).
+
+### 6. Connect Telegram Bot with Bot Script
+- Add your Telegram bot username to .env
+- Add your Telegram bot token to .env
+> ⚠️Before that, let’s set up the bot script first below!
+
 
 ---
 
-## 📁 Struktur Folder
-auto-email-sender/
- ├─ bot_email.py
- ├─ .env
- ├─ email_subject.txt
- ├─ email_body.txt
- ├─ email_config.txt
- ├─ requirements.txt
- ├─ timezone_list.txt
- ├─ auto_start.bat
- ├─ banner_utils.py
- ├─ attachments/
- │   ├─ File Anda 1
- │   ├─ File Anda 2
- │   └─ ...
 
----
-
-## ⚙️ Persiapan
-> Klik kanan pada lokasi folder yang diinginkan, lalu pilih **Open in Terminal / PowerShell / Command Prompt**.
-
-### 1. Clone repository ini di Terminal / PowerShell / Command Prompt:
-git clone https://github.com/rerejabal/auto-email-sender.git
-cd auto-email-sender
-
-### 2. Instal dependensi:
+## ⚙️ Setting up the Bot Script
+> Right-click the desired folder location, then select Open in Terminal or PowerShell or even Command Prompt if available.
+### 1. Clone this repository on Terminal or PowerShell or Command Prompt:
+```
+git clone https://github.com/rerejabal/telegram-AI-assistant.git
+cd telegram-AI-assistant
+```
+### 2. Install dependency:
+```
 pip install -r requirements.txt
+```
 
-### 3. Siapkan file Anda:
-Ubah file `.env` dengan kredensial email Anda:
+### 3. Set your environment variables in `.env`:
+> Right-click on the .env file then select Edit in Notepad or anything.
+```
+============== TELEGRAM BOT CONFIG ==============
+BOT_USERNAME=
+TELEGRAM_BOT_TOKEN=
 
-⚠️ Gmail memerlukan App Password (bukan password biasa).  
-Buat melalui Google Account → Security → App passwords.  
-Jika tidak ada, cari: *App Password*.  
-Contoh App Password: kjgwxutxzhkyqjkw
+============== GROQ CONFIG ==============
+GROQ_API_KEY=
 
-EMAIL_SENDER=youremail@gmail.com  
-EMAIL_PASSWORD=yourapppassword  
-
-`email_subject.txt` → subjek email  
-Contoh:
-Lamaran Kerja
-
-`email_body.txt` → isi email  
-Contoh:
-Kepada: HR Department  
-PT. Chang Shin Reksa Jaya  
-
-Dengan hormat,  
-
-Nama saya Thomas Alpha Edisound, dan saya ingin melamar pekerjaan di PT. Chang Shin Reksa Jaya.  
-Saya yakin dapat berkontribusi dalam mendukung visi dan misi perusahaan. Bersama ini saya lampirkan dokumen lamaran untuk dipertimbangkan.  
-
-Saya sangat berharap mendapat kesempatan untuk berdiskusi lebih lanjut mengenai kualifikasi saya dan dapat berkontribusi di perusahaan Bapak/Ibu.  
-
-Terima kasih atas perhatian Bapak/Ibu.  
-
-Hormat saya,  
-Thomas Alpha Edisound  
-
-`email_config.txt` → konfigurasi (penerima, waktu, zona waktu, lampiran)  
-`attachments` → tempat file lampiran  
-
-Contoh email_config.txt:
-RECEIVERS=contoh1@gmail.com,contoh2@gmail.com,contoh3@gmail.com  
-SEND_TIME=07:00  
-TIMEZONE=Asia/Jakarta  
-ATTACHMENTS=CV.pdf,song.mp3,video_pribadi.mp4  
+List of fallback models (separated by commas, priority order)
+GROQ_MODELS=llama-3.3-70b-versatile,llama3-70b-8192,llama3-8b-8192,gemma2-9b-it,qwen/qwen3-32b
+```
 
 ---
 
-## ▶️ Cara Menjalankan
-Jika semua sudah dikonfigurasi dengan benar, jalankan bot dengan:
-python bot_email.py
 
-Jika ingin lebih mudah, cukup jalankan file `auto_start.bat` yang sudah tersedia.
+## 📂 Folder Structure
+```
+telegram-AI-assistant/
+├── bot.py
+├── .env
+├── auto_start.bat
+├── banner_utils.py
+└── requirements.txt
+```
+
+
+ ---
+
+
+## 🕹️ Usage
+Once everything is configured properly, start the bot with:
+```
+python bot.py
+```
+If you prefer a simpler way to run, you can run the `auto_start.bat` file provided in the repository.
+
+Now you can interact with AI in Telegram.
+
+- Private Chat:
+  - The bot automatically responds to all messages after `/start` without requiring the `/ai`,`!ai` command or a mention.
+
+- Group/Channel:
+  - The bot only responds when triggered with:
+    - `/start` first 
+    - `/ai` <teks>
+    - `!ai` <teks>
+    - Mention @username_bot
+    - Reply to message bot
+
+All command in Telegram AI Assistant:
+
+- `/start` → start chatting with the bot
+- `/end` → stop chatting with the bot
+- `/ai` <question> → ask AI
+- `/setmodel` <model_name> → manually select a model
+- `/mymodel` → check which model is currently active
+- `/listmodels` → see all available models
+- `/setlang` id → switch reply language to Indonesian
+- `/setlang` en → switch reply language to English
+- `!ai` <question> → alternative AI trigger in groups
+- @botname <question> → mention bot to trigger reply in groups
+- (reply to bot message) → continue conversation in groups
 
 ---
 
-## 🔄 Update Script
-Perbarui script jika tersedia versi baru:
+
+## 🗘 Update the Bot
+Update your Script when its availabe:
+```
 git pull
 ```
