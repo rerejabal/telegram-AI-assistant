@@ -23,12 +23,12 @@ DEFAULT_MODELS = [
 def show_banner(models=None):
     """Tampilkan banner utama bot."""
     models = models or DEFAULT_MODELS
-    banner = text2art("        MYSTIC   BOT   SCRIPT", font="small")
+    banner = text2art("           MYSTIC   BOT   SCRIPT", font="small")
     console.print(
         Panel(
             banner,
             title="🤖 Telegram AI Assistant",
-            subtitle="by rerejabal",
+            subtitle="by rey-mystic",
             style="bold magenta",
         )
     )
