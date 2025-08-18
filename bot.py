@@ -107,18 +107,7 @@ logger = logging.getLogger(__name__)
 groq_client = Groq(api_key=GROQ_API_KEY)
 
 # ================== BANNER ==================
-def show_banner():
-    banner = text2art("        MYSTIC   BOT   SCRIPT", font="small")
-    console.print(
-        Panel(
-            banner,
-            title="🤖 Telegram AI Assistant",
-            subtitle="by rerejabal",
-            style="bold magenta",
-        )
-    )
-    console.print(f"[cyan]Bot username:[/cyan] @{BOT_USERNAME_ENV or 'unknown'}")
-    console.print(f"[yellow]Active models order:[/yellow]\n- " + "\n- ".join(GROQ_MODELS))
+from banner_utils import show_banner
 
 # ================== HANDLERS ==================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
