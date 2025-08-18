@@ -6,35 +6,35 @@
 <img width="1098" height="580" alt="image" src="https://github.com/user-attachments/assets/537eb22f-a774-45ac-b0e8-ab65741b4fd0" />
 # Telegram AI Assistant
 
-Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI models directly in your chat. It supports multiple providers (Groq, Llama, Gemma, Qwen, etc.) with automatic fallback when one is unavailable.
+Telegram AI Assistant adalah chatbot Telegram yang memungkinkan kamu memanggil model AI canggih langsung di obrolanmu. Mendukung banyak penyedia (Groq, Llama, Gemma, Qwen, dll.) dengan fallback otomatis jika salah satu tidak tersedia.
 
 
 ---
 
 
-## ✨ Features
+## ✨ Fitur
 
-- Supports group, channel, and private chat
-- Multi-language replies (Indonesian ID & English EN)
-- Auto language detection or manual setting with /setlang
-- Environment variable configuration (.env)
-- Customizable AI models with /setmodel, /mymodel, /listmodels
-- Fallback model system (tries next model if one fails)
-- Lightweight & easy to deploy (minimal dependencies)
-- Markdown & code formatting support
-- Conversation control with /start and /end
-- User-friendly error handling
+- Mendukung grup, channel, dan chat pribadi
+- Balasan multi-bahasa (Bahasa Indonesia ID & Bahasa Inggris EN)
+- Deteksi bahasa otomatis atau pengaturan manual dengan /setlang
+- Konfigurasi variabel lingkungan (.env)
+- Model AI dapat dikustomisasi dengan /setmodel, /mymodel, /listmodels
+- Sistem fallback model (mencoba model berikutnya jika satu gagal)
+- Ringan & mudah digunakan (dependensi minimal)
+- Mendukung format Markdown & code
+- Kontrol percakapan dengan /start dan /end
+- Penanganan error yang ramah pengguna
 
 
 ---
 
 
-## 📦 Requirements
-- Python 3.8+ (make sure it's installed)  
-- pip (Python package manager)  
-- A Telegram Bot Token and username (from [@BotFather](https://t.me/BotFather))  
+## 📦 Persyaratan
+- Python 3.8+ (pastikan sudah terpasang)  
+- pip (manajer paket Python)  
+- Token dan username Bot Telegram (dari [@BotFather](https://t.me/BotFather))  
 - GROQ API Key (https://console.groq.com/keys)
-- Required Libraries:  
+- Library yang dibutuhkan:  
   - `python-telegram-bot`  
   - `groq`  
   - `python-dotenv`
@@ -46,63 +46,67 @@ Telegram AI Assistant is a Telegram chatbot that lets you summon powerful AI mod
 ---
 
 
-## 🤖 Setting up the Bot in Telegram
+## 🤖 Menyiapkan Bot di Telegram
 
-### 1. Start BotFather
-- Open Telegram and search for BotFather (official account with blue check).
-- Open chat and press `Start`
+### 1. Mulai dengan BotFather
+- Buka Telegram dan cari BotFather (akun resmi dengan centang biru).
+- Buka chat lalu tekan `Start`
 
-### 2. Create a New Bot
-Type:
+### 2. Buat Bot Baru
+Ketik:
 ```
 /newbot
 ```
-BotFather will ask for:
-- Bot Name → display name (e.g., Crypto Hunter AI)
-- Username → must end with bot (e.g., crypto_hunter_bot)
+diff
+Copy
+Edit
+BotFather akan menanyakan:
+- Nama Bot → nama tampilan (contoh: Crypto Hunter AI)
+- Username → harus diakhiri dengan bot (contoh: crypto_hunter_bot)
 
-If successful, BotFather replies with:
+Jika berhasil, BotFather akan membalas dengan:
 ```
 Done! Congratulations on your new bot.
 Use this token to access the HTTP API:
 123456789:AAExampleTokenFromBotFather
 ```
-> ⚠️This token is your secret key, do not share it!
 
-### 3. Customize Your Bot
+> ⚠️ Token ini adalah kunci rahasia kamu, jangan dibagikan!
 
-You can set details with commands in BotFather:
-- `/setname` → change a bot's name
-- `/setdescription` → change bot description
-- `/setabouttext` → change bot about info
-- `/setuserpic` → change bot profile photo
-- `/setcommands` → change the list of commands (e.g. /start - Start the bot, /help - Show help)
-- `/deletebot` → delete a bot
+### 3. Kustomisasi Bot
 
-### 4. Setting Your Bot
-- `/token` → get authorization token
-- `/revoke` → revoke bot access token
-- `/setjoingroups` → can your bot be added to groups? (Allow you to assign the bot to channel or group)
-- `/setprivacy` → toggle privacy mode in groups
-  - Enable → bot only receives messages starting with / (commands).
-  - Disable → bot can see all messages in groups (useful for filter bots, auto-reply, moderation).
+Kamu dapat mengatur detail bot dengan perintah di BotFather:
+- `/setname` → ubah nama bot
+- `/setdescription` → ubah deskripsi bot
+- `/setabouttext` → ubah info tentang bot
+- `/setuserpic` → ubah foto profil bot
+- `/setcommands` → ubah daftar perintah (contoh: /start - Mulai bot, /help - Tampilkan bantuan)
+- `/deletebot` → hapus bot
+
+### 4. Pengaturan Bot
+- `/token` → dapatkan token otorisasi
+- `/revoke` → cabut token akses bot
+- `/setjoingroups` → apakah bot bisa ditambahkan ke grup? (Izinkan agar bot bisa digunakan di channel atau grup)
+- `/setprivacy` → atur mode privasi di grup
+  - Enable → bot hanya menerima pesan yang diawali dengan / (command).
+  - Disable → bot bisa melihat semua pesan di grup (berguna untuk bot filter, auto-reply, moderasi).
  
-### 5. Add Bot to a Group or Channel
-- Open your group → Add your bot.
-- Promote it to Admin and grant the necessary permissions (delete messages, pin messages, invite users, etc.).
+### 5. Tambahkan Bot ke Grup atau Channel
+- Buka grup kamu → Tambahkan bot.
+- Jadikan Admin dan berikan izin yang diperlukan (hapus pesan, pin pesan, undang pengguna, dll.).
 
-### 6. Connect Telegram Bot with Bot Script
-- Add your Telegram bot username to .env
-- Add your Telegram bot token to .env
-> ⚠️Before that, let’s set up the bot script first below!
+### 6. Hubungkan Bot Telegram dengan Script
+- Tambahkan username bot Telegram ke file .env
+- Tambahkan token bot Telegram ke file .env
+> ⚠️ Sebelum itu, pastikan kamu sudah menyiapkan script bot di bawah ini!
 
 
 ---
 
 
-## ⚙️ Setting up the Bot Script
-> Right-click the desired folder location, then select Open in Terminal or PowerShell or even Command Prompt if available.
-### 1. Clone this repository on Terminal or PowerShell or Command Prompt:
+## ⚙️ Menyiapkan Script Bot
+> Klik kanan folder yang diinginkan, lalu pilih Open in Terminal atau PowerShell, atau bisa juga Command Prompt jika ada.
+### 1. Clone repository ini di Terminal/PowerShell/Command Prompt:
 ```
 git clone https://github.com/rerejabal/telegram-AI-assistant.git
 cd telegram-AI-assistant
@@ -111,9 +115,8 @@ cd telegram-AI-assistant
 ```
 pip install -r requirements.txt
 ```
-
-### 3. Set your environment variables in `.env`:
-> Right-click on the .env file then select Edit in Notepad or anything.
+### 3. Atur variabel lingkungan di `.env`:
+> Klik kanan file .env lalu pilih Edit dengan Notepad atau aplikasi lain.
 ```
 ============== TELEGRAM BOT CONFIG ==============
 BOT_USERNAME=
@@ -122,14 +125,13 @@ TELEGRAM_BOT_TOKEN=
 ============== GROQ CONFIG ==============
 GROQ_API_KEY=
 
-List of fallback models (separated by commas, priority order)
+Daftar fallback models (pisahkan dengan koma, urutan prioritas)
 GROQ_MODELS=llama-3.3-70b-versatile,llama3-70b-8192,llama3-8b-8192,gemma2-9b-it,qwen/qwen3-32b
 ```
 
 ---
 
-
-## 📂 Folder Structure
+## 📂 Struktur Folder
 ```
 telegram-AI-assistant/
 ├── bot.py
@@ -139,49 +141,48 @@ telegram-AI-assistant/
 └── requirements.txt
 ```
 
+---
 
- ---
-
-
-## 🕹️ Usage
-Once everything is configured properly, start the bot with:
+## 🕹️ Cara Menggunakan
+Setelah semuanya dikonfigurasi dengan benar, jalankan bot dengan:
 ```
 python bot.py
 ```
-If you prefer a simpler way to run, you can run the `auto_start.bat` file provided in the repository.
+Jika ingin cara yang lebih mudah, cukup jalankan file `auto_start.bat` yang ada di repository.
 
-Now you can interact with AI in Telegram.
+Sekarang kamu bisa berinteraksi dengan AI di Telegram.
 
-- Private Chat:
-  - The bot automatically responds to all messages after `/start` without requiring the `/ai`,`!ai` command or a mention.
+- Chat Pribadi:
+  - Bot akan otomatis merespons semua pesan setelah `/start` tanpa perlu mengetik `/ai`,`!ai` atau mention.
 
-- Group/Channel:
-  - The bot only responds when triggered with:
-    - `/start` first 
+- Grup/Channel:
+  - Bot hanya merespons jika dipicu dengan:
+    - `/start` terlebih dahulu 
     - `/ai` <teks>
     - `!ai` <teks>
     - Mention @username_bot
-    - Reply to message bot
+    - Balas pesan bot
 
-All command in Telegram AI Assistant:
+Daftar perintah di Telegram AI Assistant:
 
-- `/start` → start chatting with the bot
-- `/end` → stop chatting with the bot
-- `/ai` <question> → ask AI
-- `/setmodel` <model_name> → manually select a model
-- `/mymodel` → check which model is currently active
-- `/listmodels` → see all available models
-- `/setlang` id → switch reply language to Indonesian
-- `/setlang` en → switch reply language to English
-- `!ai` <question> → alternative AI trigger in groups
-- @botname <question> → mention bot to trigger reply in groups
-- (reply to bot message) → continue conversation in groups
+- `/start` → mulai obrolan dengan bot
+- `/end` → akhiri obrolan dengan bot
+- `/ai` <pertanyaan> → tanyakan ke AI
+- `/setmodel` <nama_model> → pilih model secara manual
+- `/mymodel` → periksa model mana yang sedang aktif
+- `/listmodels` → lihat semua model yang tersedia
+- `/setlang` id → ubah bahasa balasan ke Bahasa Indonesia
+- `/setlang` en → ubah bahasa balasan ke Bahasa Inggris
+- `!ai` <pertanyaan> → trigger alternatif di grup
+- @botname <pertanyaan> → mention bot untuk memicu balasan di grup
+- (balas pesan bot) → lanjutkan percakapan di grup
 
 ---
 
 
-## 🗘 Update the Bot
-Update your Script when its availabe:
+## 🗘 Update Bot
+Update script kamu saat tersedia pembaruan:
 ```
 git pull
 ```
+
