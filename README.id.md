@@ -1,5 +1,5 @@
 
-#### *Read with other languages:*  
+#### *Read this with other languages:*  
 [![English](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/United-States.png)](README.md)
 [![Bahasa Indonesia](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Indonesia.png)](README.id.md)
 --------
@@ -186,6 +186,7 @@ Update script kamu saat tersedia pembaruan:
 ```
 git pull
 ```
+
 
 
 
