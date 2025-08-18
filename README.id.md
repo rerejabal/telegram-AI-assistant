@@ -3,7 +3,8 @@
 [![English](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/United-Kingdom.png)](README.md)
 [![Bahasa Indonesia](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Indonesia.png)](README.id.md)
 --------
-<img width="1098" height="580" alt="image" src="https://github.com/user-attachments/assets/537eb22f-a774-45ac-b0e8-ab65741b4fd0" />
+<img width="1095" height="520" alt="image (2)" src="https://github.com/user-attachments/assets/d5aecab5-8f01-4a46-a498-a726dd8bea39" />
+
 
 # Telegram AI Assistant
 
@@ -109,7 +110,7 @@ Kamu dapat mengatur detail bot dengan perintah di BotFather:
 > Klik kanan folder yang diinginkan, lalu pilih Open in Terminal atau PowerShell, atau bisa juga Command Prompt jika ada.
 ### 1. Clone repository ini di Terminal/PowerShell/Command Prompt:
 ```
-git clone https://github.com/rerejabal/telegram-AI-assistant.git
+git clone https://github.com/rey-mystic/telegram-AI-assistant.git
 cd telegram-AI-assistant
 ```
 ### 2. Install dependency:
@@ -186,6 +187,7 @@ Update script kamu saat tersedia pembaruan:
 ```
 git pull
 ```
+
 
 
 
